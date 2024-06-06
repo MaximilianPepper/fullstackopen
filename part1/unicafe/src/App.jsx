@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 const Statistics = (props) => {
+  if (props.total === 0) return <p>No feedback given</p>;
   return (
     <>
       <p>good {props.good}</p>
