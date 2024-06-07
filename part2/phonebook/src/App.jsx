@@ -13,6 +13,10 @@ const App = () => {
   };
   const formSubmit = (e) => {
     e.preventDefault();
+    if (!checkUnique(newName, persons)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
     const person = { name: newName };
     setPersons(persons.concat(person));
     setNewName("");
@@ -35,5 +39,10 @@ const App = () => {
     </div>
   );
 };
-
+function checkUnique(name, array) {
+  for (const person of array) {
+    if (person.name === name) return false;
+  }
+  return true;
+}
 export default App;
