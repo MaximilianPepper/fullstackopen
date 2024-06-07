@@ -17,6 +17,11 @@ const Course = (props) => {
       {props.course.parts.map((line) => (
         <Content key={line.id} line={line} />
       ))}
+      <p>
+        total of{" "}
+        {props.course.parts.reduce((acc, curr) => acc + curr.exercises, 0)}{" "}
+        exercises
+      </p>
     </div>
   );
 };
@@ -39,6 +44,11 @@ const App = () => {
         name: "State of a component",
         exercises: 14,
         id: 3,
+      },
+      {
+        name: "Redux",
+        exercises: 11,
+        id: 4,
       },
     ],
   };
