@@ -1,5 +1,50 @@
 import { useState } from "react";
 
+const Persons = (props) => {
+  return (
+    <table>
+      <tbody>
+        {props.persons
+          .filter((person) => checkContain(person.name, props.filter))
+          .map((person) => (
+            <Names
+              key={person.name}
+              name={person.name}
+              number={person.number}
+            />
+          ))}
+      </tbody>
+    </table>
+  );
+};
+const PersonForm = (props) => {
+  return (
+    <form onSubmit={props.onSubmit}>
+      <div>
+        name: <input onChange={props.onChange1} value={props.value1} />
+      </div>
+      <div>
+        number: <input onChange={props.onChange2} value={props.value2} />
+      </div>
+
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
+
+const Filter = (props) => {
+  return (
+    <>
+      <div>
+        filter shown with{" "}
+        <input onChange={props.onChange} value={props.value} />
+      </div>
+    </>
+  );
+};
+
 const Names = (props) => {
   return (
     <tr>
@@ -41,36 +86,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input onChange={filterName} value={newFilter} />
-      </div>
-      <h2>add a new</h2>
+      <Filter onChange={filterName} value={newFilter} />
 
-      <form onSubmit={formSubmit}>
-        <div>
-          name: <input onChange={nameInput} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={numberInput} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <h2>add a new</h2>
+      <PersonForm
+        onSubmit={formSubmit}
+        onChange1={nameInput}
+        value1={newName}
+        onChange2={numberInput}
+        value2={newNumber}
+      />
+
       <h2>Numbers</h2>
-      <table>
-        <tbody>
-          {persons
-            .filter((person) => checkContain(person.name, newFilter))
-            .map((person) => (
-              <Names
-                key={person.name}
-                name={person.name}
-                number={person.number}
-              />
-            ))}
-        </tbody>
-      </table>
+      <Persons persons={persons} filter={newFilter} />
     </div>
   );
 };
