@@ -10,10 +10,15 @@ const Names = (props) => {
 };
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456", id: 1 },
+    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
+    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
+  ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-
+  const [newFilter, setNewFilter] = useState("");
   const nameInput = (e) => {
     setNewName(e.target.value);
   };
@@ -31,9 +36,16 @@ const App = () => {
     setNewName("");
     setNewNumber("");
   };
+
+  const filterName = (e) => setNewFilter(e.target.value);
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with <input onChange={filterName} value={newFilter} />
+      </div>
+      <h2>add a new</h2>
+
       <form onSubmit={formSubmit}>
         <div>
           name: <input onChange={nameInput} value={newName} />
@@ -47,9 +59,17 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <table>
-        {persons.map((person) => (
-          <Names key={person.name} name={person.name} number={person.number} />
-        ))}
+        <tbody>
+          {persons
+            .filter((person) => checkContain(person.name, newFilter))
+            .map((person) => (
+              <Names
+                key={person.name}
+                name={person.name}
+                number={person.number}
+              />
+            ))}
+        </tbody>
       </table>
     </div>
   );
@@ -59,5 +79,11 @@ function checkUnique(name, array) {
     if (person.name === name) return false;
   }
   return true;
+}
+function checkContain(name, filter) {
+  if (filter === "") return true;
+  name = name.toLowerCase();
+  filter = filter.toLowerCase();
+  return name.includes(filter);
 }
 export default App;
