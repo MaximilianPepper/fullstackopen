@@ -1,6 +1,18 @@
 import { useState, useEffect } from "react";
 import backend from "./backend";
 
+const Names = (props) => {
+  return (
+    <tr>
+      <td>{props.name}</td>
+      <td>{props.number}</td>
+      <td>
+        <button onClick={() => props.deletePerson(props.id)}>del</button>
+      </td>
+    </tr>
+  );
+};
+
 const Persons = (props) => {
   return (
     <table>
@@ -10,6 +22,8 @@ const Persons = (props) => {
           .map((person) => (
             <Names
               key={person.name}
+              id={person.id}
+              deletePerson={props.deletePerson}
               name={person.name}
               number={person.number}
             />
@@ -46,15 +60,6 @@ const Filter = (props) => {
   );
 };
 
-const Names = (props) => {
-  return (
-    <tr>
-      <td>{props.name}</td>
-      <td>{props.number}</td>
-    </tr>
-  );
-};
-
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -79,10 +84,18 @@ const App = () => {
       return;
     }
     const person = { name: newName, number: newNumber };
-    backend.create(person);
-    setPersons(persons.concat(person));
-    setNewName("");
-    setNewNumber("");
+    backend.create(person).then((person) => {
+      setPersons(persons.concat(person));
+      setNewName("");
+      setNewNumber("");
+    });
+  };
+
+  const deletePerson = (id) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      backend.delItem(id);
+      setPersons(persons.filter((person) => person.id !== id));
+    } else return;
   };
 
   const filterName = (e) => setNewFilter(e.target.value);
@@ -101,7 +114,11 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={newFilter} />
+      <Persons
+        deletePerson={deletePerson}
+        persons={persons}
+        filter={newFilter}
+      />
     </div>
   );
 };
