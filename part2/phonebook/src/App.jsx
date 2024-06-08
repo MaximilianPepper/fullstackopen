@@ -80,7 +80,24 @@ const App = () => {
   const formSubmit = (e) => {
     e.preventDefault();
     if (!checkUnique(newName, persons)) {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook do you want to change the number?`
+        )
+      ) {
+        const p = persons.find((e) => e.name === newName);
+        const newp = { ...p, number: newNumber };
+        const updatedPersons = persons.map((person) =>
+          person.id === newp.id ? newp : person
+        );
+        backend.update(p.id, newp).then(() => {
+          setPersons(updatedPersons);
+          setNewName("");
+          setNewNumber("");
+        });
+      }
+      setNewName("");
+      setNewNumber("");
       return;
     }
     const person = { name: newName, number: newNumber };
