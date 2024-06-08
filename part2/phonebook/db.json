@@ -1,23 +1,8 @@
 {
   "persons": [
     {
-      "id": "1a71",
-      "name": "test",
-      "number": "newnumb"
-    },
-    {
-      "id": "7966",
-      "name": "uwot",
-      "number": "1235"
-    },
-    {
       "id": "378c",
       "name": "works?",
-      "number": "123456"
-    },
-    {
-      "id": "5833",
-      "name": "arto",
       "number": "123456"
     },
     {

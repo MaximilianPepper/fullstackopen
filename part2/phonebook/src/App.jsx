@@ -6,7 +6,9 @@ const Notification = ({ message }) => {
     return null;
   }
 
-  return <div className="message">{message}</div>;
+  return (
+    <div className={message[0] === "I" ? "error" : "message"}>{message}</div>
+  );
 };
 
 const Names = (props) => {
@@ -99,13 +101,21 @@ const App = () => {
         const updatedPersons = persons.map((person) =>
           person.id === newp.id ? newp : person
         );
-        backend.update(p.id, newp).then(() => {
-          setPersons(updatedPersons);
-          setMessage(`Update number of ${newName}`);
-          setTimeout(() => setMessage(null), 5000);
-          setNewName("");
-          setNewNumber("");
-        });
+        backend
+          .update(p.id, newp)
+          .then(() => {
+            setPersons(updatedPersons);
+            setMessage(`Update number of ${newName}`);
+            setTimeout(() => setMessage(null), 5000);
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((e) => {
+            setMessage(
+              `Information of ${newName} has already been removed from server`
+            );
+            setTimeout(() => setMessage(null), 5000);
+          });
       }
       setNewName("");
       setNewNumber("");
