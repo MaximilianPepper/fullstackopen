@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import backend from "./backend";
 
 const Persons = (props) => {
   return (
@@ -62,9 +62,7 @@ const App = () => {
   const [newFilter, setNewFilter] = useState("");
 
   const hook = () => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-    });
+    backend.getData().then((response) => setPersons(response));
   };
 
   useEffect(hook, []);
@@ -81,6 +79,7 @@ const App = () => {
       return;
     }
     const person = { name: newName, number: newNumber };
+    backend.create(person);
     setPersons(persons.concat(person));
     setNewName("");
     setNewNumber("");
