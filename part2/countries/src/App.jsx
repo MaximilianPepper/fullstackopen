@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 const baseUrl = "https://studies.cs.helsinki.fi/restcountries/api/all";
+const searchUrl = "https://studies.cs.helsinki.fi/restcountries/api/name/";
 
-const Countries = ({ countries }) => {
+const Countries = (props) => {
+  const countries = props.countries;
   if (countries.length === 0) return null;
   else if (countries.length > 10)
     return <p>Too many matches, specify another filter</p>;
@@ -10,7 +12,12 @@ const Countries = ({ countries }) => {
     return (
       <>
         {countries.map((country) => (
-          <p key={country.name.official}>{country.name.common}</p>
+          <div key={country.name.official}>
+            <p>{country.name.common}</p>
+            <button onClick={() => props.displayCountry(country.name.common)}>
+              show
+            </button>
+          </div>
         ))}
       </>
     );
@@ -53,12 +60,17 @@ function App() {
       );
     } else setCountries([]);
   };
+  const displayCountry = (country) => {
+    axios.get(`${searchUrl}${country.toLowerCase()}`).then((response) => {
+      setCountries([response.data]);
+    });
+  };
   return (
     <>
       <div>
         find countries <input onChange={handleChange} value={input} />
       </div>
-      <Countries countries={countries} />
+      <Countries countries={countries} displayCountry={displayCountry} />
     </>
   );
 }
